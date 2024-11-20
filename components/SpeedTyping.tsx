@@ -2,33 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
-
-const prompts = [
-    "The quick brown fox jumps over the lazy dog",
-    "To be or not to be, that is the question",
-    "All that glitters is not gold",
-    "A journey of a thousand miles begins with a single step",
-    "Where there's a will, there's a way",
-    "Look before you leap, but don't hesitate too long.",
-    "Actions speak louder than words, so let your deeds do the talking.",
-    "Better late than never, but strive for punctuality.",
-    "Don't count your chickens before they hatch, as unforeseen circumstances can arise.",
-    "Early to bed and early to rise, makes a man healthy, wealthy, and wise, according to Benjamin Franklin.",
-    "Practice makes perfect, so continue honing your skills diligently.",
-    "Two wrongs don't make a right; seeking revenge only perpetuates the cycle.",
-    "The pen is mightier than the sword, demonstrating the power of communication.",
-    "When in Rome, do as the Romans do, adapting to local customs and traditions.",
-    "A picture is worth a thousand words, conveying complex emotions and narratives visually.",
-    "Birds of a feather flock together, as people tend to gravitate towards like-minded individuals.",
-    "Honesty is the best policy, fostering trust and building strong relationships.",
-    "Necessity is the mother of invention, driving innovation and problem-solving.",
-    "The early bird catches the worm, emphasizing the advantages of proactivity.",
-    "Time and tide wait for no man, highlighting the importance of seizing opportunities.",
-    "A stitch in time saves nine, advocating for preventative measures to avoid larger problems.",
-    "Make hay while the sun shines, urging us to capitalize on favorable conditions.",
-    "Variety is the spice of life, celebrating diversity and embracing new experiences.",
-    "All's well that ends well, suggesting that a positive outcome can redeem past difficulties."
-];
+import { prompts } from "@/components/prompts";
 
 export default function SpeedTypingTest() {
     const [prompt, setPrompt] = useState('')
@@ -48,7 +22,6 @@ export default function SpeedTypingTest() {
     const startTest = useCallback(() => {
         setPrompt(getRandomPrompt())
         setUserInput('')
-        setStartTime(Date.now())
         setEndTime(null)
         setWpm(0)
         setAccuracy(100)
@@ -63,6 +36,10 @@ export default function SpeedTypingTest() {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const input = e.target.value
+        if (input.length === 1) {
+            console.log("Timer started")
+            setStartTime(Date.now())
+        }
         setUserInput(input)
 
         const accuracyPercentage = calculateAccuracy(input, prompt)
