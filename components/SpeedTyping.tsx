@@ -87,6 +87,7 @@ export default function SpeedTypingTest() {
                                 className="testArea w-full h-32 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                                 disabled={!isTestActive}
                                 autoFocus
+                                spellCheck={false}
                             />
                             <div
                                 aria-hidden="true"
