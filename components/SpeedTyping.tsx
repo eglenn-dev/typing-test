@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { prompts } from "@/components/prompts";
 
-export default function SpeedTypingTest() {
+interface SpeedTypingTestProps {
+    renderResults: () => void;
+}
+
+export default function SpeedTypingTest({ renderResults }: SpeedTypingTestProps) {
     const [prompt, setPrompt] = useState('')
     const [userInput, setUserInput] = useState('')
     const [startTime, setStartTime] = useState<number | null>(null)
@@ -12,6 +16,7 @@ export default function SpeedTypingTest() {
     const [wpm, setWpm] = useState(0)
     const [accuracy, setAccuracy] = useState(100)
     const [isTestActive, setIsTestActive] = useState(false)
+    const [savedResults, setSavedResults] = useState(false)
     const inputRef = useRef<HTMLTextAreaElement>(null)
 
     const getRandomPrompt = useCallback(() => {
@@ -26,6 +31,7 @@ export default function SpeedTypingTest() {
         setWpm(0)
         setAccuracy(100)
         setIsTestActive(true)
+        setSavedResults(false)
         inputRef.current?.focus()
     }, [getRandomPrompt])
 
@@ -67,8 +73,20 @@ export default function SpeedTypingTest() {
             const wordsTyped = userInput.trim().split(/\s+/).length
             const calculatedWpm = Math.round(wordsTyped / timeInMinutes)
             setWpm(calculatedWpm)
+            if (!savedResults) {
+                const testResult = {
+                    wpm: calculatedWpm,
+                    accuracy,
+                    date: new Date().toISOString(),
+                }
+                const userResults = JSON.parse(localStorage.getItem('typingTestResult') || '[]');
+                userResults.push(testResult);
+                localStorage.setItem('typingTestResult', JSON.stringify(userResults));
+                renderResults();
+                setSavedResults(true);
+            }
         }
-    }, [endTime, startTime, userInput])
+    }, [endTime, startTime, userInput, accuracy, wpm, savedResults, renderResults])
 
     return (
         <Card className="card w-full max-w-3xl mx-auto">
@@ -88,6 +106,7 @@ export default function SpeedTypingTest() {
                                 disabled={!isTestActive}
                                 autoFocus
                                 spellCheck={false}
+                                style={{ resize: 'none', color: 'transparent' }}
                             />
                             <div
                                 aria-hidden="true"

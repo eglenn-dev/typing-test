@@ -1,0 +1,13 @@
+.mainContainer {
+    color: white;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    gap: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .mainContainer {
+        grid-template-columns: 1fr;
+    }
+
+}
